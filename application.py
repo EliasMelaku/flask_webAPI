@@ -8,6 +8,7 @@ import os
 from dbModels import *
 from schema import *
 
+
 app = Flask(__name__)
 
 # app configuration settings
@@ -26,9 +27,8 @@ api = Api(app, version='1.0', title='DagmEbay API',
 
 # Set up schema to access the info from the database
 
-# to access one
-user_schema =  UserSchema
-# to access many
+# first one to access 1, second one to access many
+user_schema =  UserSchema()
 users_schema = UserSchema(many=True)
 
 # Model required by flask_restplus for expect
