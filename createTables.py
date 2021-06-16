@@ -1,13 +1,10 @@
-import os
-
-from flask import Flask
+from flask import Flask,request
 
 from dbModels import *
 
-
 app = Flask(__name__)
 
-app.config['SERVER_NAME'] = 'localhost:8888'
+app.config['SERVER_NAME'] = "localhost:8888"
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:forPostgre1@localhost:5432/dagmebaydb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

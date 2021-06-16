@@ -2,53 +2,45 @@ from flask import Flask, request
 from flask_marshmallow import Marshmallow
 from flask_restplus import Api, Resource, fields
 from werkzeug import cached_property
+from flask_sqlalchemy import SQLAlchemy
 
 import os
-
-from dbModels import *
-from schema import *
 
 
 app = Flask(__name__)
 
+
 # app configuration settings
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
 
 # Set up the database
-db.init_app(app)
-ma = Marshmallow(app)
+# db = SQLAlchemy(app)
 
-# Configure api
+db = SQLAlchemy(app)
 
-api = Api(app, version='1.0', title='DagmEbay API', 
-          description="API for the dagm Ebay web serivce")
+# some imports to avoid circular import
+from dbModels import *
+from schema import *
+from auth.auth import auth
+from items.items import items
+from auction.auction import auctions
+from bids.bids import bids
+from review.review import reviews
 
-# Set up schema to access the info from the database
+db.create_all()
 
-# first one to access 1, second one to access many
-user_schema =  UserSchema()
-users_schema = UserSchema(many=True)
+# reigster the blueprints
+app.register_blueprint(auth)
+app.register_blueprint(items)
+app.register_blueprint(auctions)
+app.register_blueprint(bids)
+app.register_blueprint(reviews)
 
-# Model required by flask_restplus for expect
+@app.route("/")
+def index():
+    return "404 Not found"
 
-user = api.model("User", {
-    'Username': fields.String,
-    'FirstName': fields.String, 
-    'LastName': fields.String,
-    'Email': fields.String,
-    'Address': fields.String,
-    'PhoneNumber': fields.String,
-    'Rating': fields.Integer
-})
-
-
-@api.route('/api/users/<string:username>')
-class userResource(Resource):
-    def get(self, username):
-        # to display one user
-        
-        user = User.query.filter_by(Username=username).first()
-        return user_schema.dump(user)
    
