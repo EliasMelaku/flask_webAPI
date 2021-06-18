@@ -5,7 +5,7 @@ schema = Marshmallow()
 
 class UserSchema(schema.Schema):
     class Meta:
-        fields = ("UserId", "Username", "Password", "FirstNmae", "LastName",
+        fields = ("UserId", "Username", "FirstName", "LastName",
                   "Email", "Address", "PhoneNumber", "Rating")
 
         model = User
@@ -29,6 +29,11 @@ class AuctionSchema(schema.Schema):
                   "InitialPrice", "HighestPrice", "IsCompleted", "HighestBidder")
 
         model = Auction
+# class TestSchema(schema.Schema):
+#     class Meta:
+#         fields = ("AuctionId", "ItemId", "StartDate", "EndDate",
+#                   "InitialPrice", "HighestPrice", "IsCompleted", "HighestBidder")
+#         model = TestModel
 class ReviewSchema(schema.Schema):   
     class Meta:
         fields = ("ReviewId", "SellerId", "ReviewerId", "Description",

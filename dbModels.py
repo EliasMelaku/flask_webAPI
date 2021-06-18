@@ -7,7 +7,7 @@ class User(db.Model):
     __tablename__ = "users"
     UserId = db.Column(db.String, primary_key=True)
     Username = db.Column(db.String, unique=True)
-    Password = db.Column(db.String, nullable=False)
+    
     FirstName = db.Column(db.String, nullable=False)
     LastName = db.Column(db.String, nullable=False)
     Email = db.Column(db.String, nullable=False)
@@ -30,7 +30,7 @@ class Bid(db.Model):
     __tablename__ = "bids"
     AuctionId = db.Column(db.Integer, db.ForeignKey(
         "auctions.AuctionId"), nullable=False)
-    BidId = db.Column(db.Integer, primary_key=True)
+    BidId = db.Column(db.String, primary_key=True)
     UserId = db.Column(db.String, db.ForeignKey(
         "users.UserId"), nullable=False)
     Amount = db.Column(db.Float, nullable=False)

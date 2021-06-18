@@ -1,13 +1,14 @@
 from flask import Flask, request
 from flask.blueprints import Blueprint
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 from flask_restplus import Api, Resource, fields
 from werkzeug import cached_property
 
 from schema import *
 
 reviews = Blueprint("reviews", __name__, url_prefix="/reviews")
-
+CORS(reviews, supports_credentials=True)
 api = Api(reviews, version='1.0', title='DagmEbay API', 
           description="API for the dagm Ebay web serivce")
 

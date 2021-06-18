@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_marshmallow import Marshmallow
 from flask_restplus import Api, Resource, fields
 from werkzeug import cached_property
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
 import os
@@ -9,7 +10,7 @@ import os
 
 app = Flask(__name__)
 
-
+CORS(app, supports_credentials=True)
 # app configuration settings
 
 

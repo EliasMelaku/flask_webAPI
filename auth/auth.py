@@ -3,11 +3,14 @@ from flask.blueprints import Blueprint
 from flask_marshmallow import Marshmallow
 from flask_restplus import Api, Resource, fields
 from werkzeug import cached_property
+from flask_cors import CORS, cross_origin
 
 from schema import *
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 # Set up schema to access the info from the database
+
+CORS(auth, supports_credentials=True)
 
 api = Api(auth, version='1.0', title='DagmEbay API', 
           description="API for the dagm Ebay web serivce")
@@ -34,14 +37,52 @@ user = api.model("User", {
 
 
 @api.response(200, 'Return found users')
-@api.route('/users/<string:username>')
+@api.route('/users/<string:userId>')
 class userResource(Resource):
-    def get(self, username):
+    def get(self, userId):
         # to display one user
         
-        user = User.query.filter_by(Username=username).first()
+        user = User.query.filter_by(UserId=userId).first()
         return user_schema.dump(user)
     
+# Route to Check User Firebase ID
+@api.route("/getuser/<firebase_id>")
+class userResource(Resource):
+    def get(self,firebase_id):
+        user = User.query.filter_by(UserId=firebase_id).first()
+        if(user):
+            response_object = {
+                "code": "Error",
+                "message": "firebase_id already in database"
+            }
+            return(response_object)
+        response_object = {"code":"Success"}
+        return (response_object)
+    
+@api.route("/signuser")
+class Register(Resource):
+    def post(self):
+        # try:
+            response_object = {'status':'success'}
+            post_data = request.get_json()['user_info']
+            userId =post_data['UserId']
+            username=post_data['Username']
+            firstName=post_data['FirstName']
+            lastName=post_data['LastName']
+            email =post_data['Email']
+            address=post_data['Address']
+            phoneNumber=post_data['PhoneNumber']
+            rating=post_data['Rating']
+            
+            print("here")
+        
+            new_user = User(UserId=userId,Username=username,FirstName=firstName,LastName=lastName,Email=email, Address=address, PhoneNumber=phoneNumber,Rating=rating)
+            db.session.add(new_user)
+            db.session.commit() 
+            print('here again')               
+            return (response_object) , 200
+        # except:
+            # print("Here")
 
 @api.route('/users')
 class userResource(Resource):
